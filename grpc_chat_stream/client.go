@@ -55,7 +55,6 @@ func Connect(user *chat.User) error {
 
 func main() {
 	timestamp := time.Now()
-	done := make(chan int)
 
 	name := flag.String("N", "Anon", "The Name of the user")
 	flag.Parse()
@@ -94,10 +93,5 @@ func main() {
 		}
 	}()
 
-	go func() {
-		wait.Wait()
-		close(done)
-	}()
-
-	<-done
+	wait.Wait()
 }

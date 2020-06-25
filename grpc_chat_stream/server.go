@@ -36,7 +36,6 @@ func (s *Server) CreateStream(pconn *chat.Connect, stream chat.BroadCast_CreateS
 
 func (s *Server) BroadcastMessage(ctx context.Context, msg *chat.Message) (*chat.Close, error) {
 	wait := sync.WaitGroup{}
-	done := make(chan int)
 
 	for _, conn := range s.Connection {
 		// log.Println(conn.id)
@@ -59,12 +58,8 @@ func (s *Server) BroadcastMessage(ctx context.Context, msg *chat.Message) (*chat
 		}(msg, conn)
 	}
 
-	go func() {
-		wait.Wait()
-		close(done)
-	}()
+	wait.Wait()
 
-	<-done
 	return &chat.Close{}, nil
 }
 
